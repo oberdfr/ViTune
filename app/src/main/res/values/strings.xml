@@ -89,7 +89,15 @@
     <string name="watch_on_youtube">Watch on YouTube</string>
     <string name="open_in_youtube_music">Open in YouTube Music</string>
     <string name="watch_playlist_on_youtube">Watch playlist on YouTube</string>
+    <string name="youtube_music">YouTube Music</string>
     <string name="youtube_music_not_installed">YouTube Music is not installed on your device!</string>
+    <string name="youtube_music_setup">YouTube Music Setup</string>
+    <string name="youtube_music_setup_description">To view your YouTube Music playlists, you need to provide authentication headers from your browser. Visit YouTube Music in your browser, log in, then copy the headers using browser developer tools.</string>
+    <string name="youtube_music_headers">YouTube Music Headers</string>
+    <string name="youtube_music_headers_empty">Please enter your YouTube Music headers</string>
+    <string name="connect">Connect</string>
+    <string name="official_playlists">Official Playlists</string>
+    <string name="your_playlists">Your Playlists</string>
 
     <string name="remove_from_queue">Remove from queue</string>
     <string name="remove_from_playlist">Remove from playlist</string>
@@ -104,8 +112,8 @@
 
     <string name="from_wikipedia">From Wikipedia</string>
     <string name="wikipedia_cc_by_sa">From Wikipedia under Creative Commons Attribution CC-BY-SA 3.0</string>
-    <string name="quote_open">“</string>
-    <string name="quote_close">„</string>
+    <string name="quote_open">"</string>
+    <string name="quote_close">""</string>
 
     <string name="moods_and_genres">Moods and genres</string>
     <string name="new_released_albums">New released albums</string>
@@ -434,4 +442,6 @@
         <item quantity="one">%1$d song</item>
         <item quantity="other">%1$d songs</item>
     </plurals>
+
+    <string name="view_playlists">View Playlists</string>
 </resources>

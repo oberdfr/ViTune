@@ -19,6 +19,8 @@ import app.vitune.android.ui.screens.search.SearchScreen
 import app.vitune.android.ui.screens.searchresult.SearchResultScreen
 import app.vitune.android.ui.screens.settings.LogsScreen
 import app.vitune.android.ui.screens.settings.SettingsScreen
+import app.vitune.android.ui.screens.ytmusic.YTMusicScreen
+import app.vitune.android.ui.screens.ytmusic.YTMusicSetupScreen
 import app.vitune.android.utils.toast
 import app.vitune.compose.routing.Route0
 import app.vitune.compose.routing.Route1
@@ -26,6 +28,7 @@ import app.vitune.compose.routing.Route3
 import app.vitune.compose.routing.Route4
 import app.vitune.compose.routing.RouteHandlerScope
 import app.vitune.core.data.enums.BuiltInPlaylist
+import app.vitune.providers.ytmusic.YTMusic
 import io.ktor.http.Url
 import java.util.UUID
 
@@ -48,6 +51,8 @@ val moodRoute = Route1<Mood>("moodRoute")
 val searchResultRoute = Route1<String>("searchResultRoute")
 val searchRoute = Route1<String>("searchRoute")
 val settingsRoute = Route0("settingsRoute")
+val ytMusicSetupRoute = Route0("ytMusicSetupRoute")
+val ytMusicRoute = Route1<Map<String, String>>("ytMusicRoute")
 
 @Composable
 fun RouteHandlerScope.GlobalRoutes() {
@@ -88,6 +93,14 @@ fun RouteHandlerScope.GlobalRoutes() {
 
     settingsRoute {
         SettingsScreen()
+    }
+    
+    ytMusicSetupRoute {
+        YTMusicSetupScreen()
+    }
+    
+    ytMusicRoute { authHeaders ->
+        YTMusicScreen(authHeaders = authHeaders)
     }
 
     searchRoute { initialTextInput ->

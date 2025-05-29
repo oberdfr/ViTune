@@ -48,6 +48,8 @@ import app.vitune.android.ui.components.themed.SliderDialog
 import app.vitune.android.ui.components.themed.SliderDialogBody
 import app.vitune.android.ui.screens.Route
 import app.vitune.android.ui.screens.logsRoute
+import app.vitune.android.ui.screens.ytMusicRoute
+import app.vitune.android.ui.screens.ytMusicSetupRoute
 import app.vitune.android.utils.findActivity
 import app.vitune.android.utils.intent
 import app.vitune.android.utils.isIgnoringBatteryOptimizations
@@ -55,6 +57,7 @@ import app.vitune.android.utils.smoothScrollToBottom
 import app.vitune.android.utils.toast
 import app.vitune.core.ui.utils.isAtLeastAndroid12
 import app.vitune.core.ui.utils.isAtLeastAndroid6
+import app.vitune.providers.ytmusic.YTMusic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -149,6 +152,25 @@ fun OtherSettings() {
                 isChecked = DataPreferences.autoSyncPlaylists,
                 onCheckedChange = { DataPreferences.autoSyncPlaylists = it }
             )
+        }
+        SettingsGroup(title = stringResource(R.string.youtube_music)) {
+            SettingsEntry(
+                title = stringResource(R.string.youtube_music_setup),
+                text = stringResource(R.string.youtube_music_setup_description),
+                onClick = { ytMusicSetupRoute() }
+            )
+
+            // Show this option only if headers are already configured
+            AnimatedVisibility(visible = DataPreferences.ytMusicHeaders.isNotBlank()) {
+                SettingsEntry(
+                    title = stringResource(R.string.view_playlists),
+                    text = stringResource(R.string.your_playlists),
+                    onClick = {
+                        val headers = YTMusic.setupFromBrowser(DataPreferences.ytMusicHeaders)
+                        ytMusicRoute(headers)
+                    }
+                )
+            }
         }
         SettingsGroup(title = stringResource(R.string.built_in_playlists)) {
             IntSettingsEntry(
