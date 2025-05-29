@@ -60,6 +60,18 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
+import com.google.android.gms.auth.GoogleAuthUtil
+import androidx.compose.runtime.LaunchedEffect
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 @SuppressLint("BatteryLife")
 @Route
@@ -334,5 +346,128 @@ fun OtherSettings() {
                     .padding(horizontal = 16.dp)
             )
         }
+
+        SettingsGroup(title = stringResource(R.string.ytmusic)) {
+            var isLoggedIn by rememberSaveable { mutableStateOf(DataPreferences.ytMusicIdToken.isNotBlank()) }
+            var accountName by rememberSaveable { mutableStateOf(DataPreferences.ytMusicAccountEmail) }
+            var idToken by rememberSaveable { mutableStateOf(DataPreferences.ytMusicIdToken) }
+
+            // Configura GoogleSignInClient
+            val gso = remember {
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestIdToken("YOUR_WEB_CLIENT_ID") // Sostituisci con il client ID OAuth 2.0
+                    .build()
+            }
+            val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
+
+            // Launcher per Google Sign-In
+            val signInLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
+                    isLoggedIn = true
+                    accountName = account.email ?: account.displayName ?: ""
+                    idToken = account.idToken ?: ""
+                    DataPreferences.ytMusicAccountEmail = accountName
+                    DataPreferences.ytMusicIdToken = idToken
+                } catch (e: Exception) {
+                    isLoggedIn = false
+                    accountName = ""
+                    idToken = ""
+                    DataPreferences.ytMusicAccountEmail = ""
+                    DataPreferences.ytMusicIdToken = ""
+                }
+            }
+
+            if (isLoggedIn) {
+                SettingsEntry(
+                    title = stringResource(R.string.ytmusic_logged_in, accountName),
+                    text = stringResource(R.string.ytmusic_logout),
+                    onClick = {
+                        googleSignInClient.signOut()
+                        isLoggedIn = false
+                        accountName = ""
+                        idToken = ""
+                        DataPreferences.ytMusicAccountEmail = ""
+                        DataPreferences.ytMusicIdToken = ""
+                    }
+                )
+                SettingsEntry(
+                    title = stringResource(R.string.ytmusic_import),
+                    text = null,
+                    onClick = {
+                        // TODO: Usa idToken per importare playlist da YouTube Music
+                    }
+                )
+            } else {
+                SettingsEntry(
+                    title = stringResource(R.string.ytmusic_login),
+                    text = stringResource(R.string.ytmusic_login_description),
+                    onClick = {
+                        signInLauncher.launch(googleSignInClient.signInIntent)
+                    }
+                )
+            }
+        }
+    }
+}
+
+val client = OkHttpClient()
+
+fun fetchYouTubeMusicPlaylists(accessToken: String, onResult: (List<YTMusicPlaylist>?) -> Unit) {
+    val request = Request.Builder()
+        .url("https://www.googleapis.com/youtube/v3/playlists?mine=true&part=snippet,contentDetails&maxResults=50")
+        .addHeader("Authorization", "Bearer $accessToken")
+        .build()
+    Thread {
+        try {
+            val response = client.newCall(request).execute()
+            val body = response.body?.string()
+            if (response.isSuccessful && body != null) {
+                val json = JSONObject(body)
+                val items = json.getJSONArray("items")
+                val playlists = mutableListOf<YTMusicPlaylist>()
+                for (i in 0 until items.length()) {
+                    val item = items.getJSONObject(i)
+                    val id = item.getString("id")
+                    val snippet = item.getJSONObject("snippet")
+                    val title = snippet.getString("title")
+                    val thumbnails = snippet.optJSONObject("thumbnails")
+                    val thumb = thumbnails?.optJSONObject("default")?.optString("url")
+                    val contentDetails = item.optJSONObject("contentDetails")
+                    val count = contentDetails?.optInt("itemCount") ?: 0
+                    playlists.add(YTMusicPlaylist(id, title, count, thumb))
+                }
+                onResult(playlists)
+            } else {
+                onResult(null)
+            }
+        } catch (e: Exception) {
+            onResult(null)
+        }
+    }.start()
+}
+
+// ... nel signInLauncher, dopo aver ottenuto l'access token ...
+LaunchedEffect(account) {
+    try {
+        val token = withContext(Dispatchers.IO) {
+            GoogleAuthUtil.getToken(
+                context,
+                account.account,
+                "oauth2:https://www.googleapis.com/auth/youtube.readonly"
+            )
+        }
+        accessToken = token
+        error = null
+        // Fetch playlists
+        fetchYouTubeMusicPlaylists(token) { playlists ->
+            playlists?.let {
+                DataPreferences.ytMusicPlaylists = it
+            }
+        }
+    } catch (e: Exception) {
+        error = e.message
     }
 }

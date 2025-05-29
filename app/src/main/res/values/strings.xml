@@ -104,8 +104,8 @@
 
     <string name="from_wikipedia">From Wikipedia</string>
     <string name="wikipedia_cc_by_sa">From Wikipedia under Creative Commons Attribution CC-BY-SA 3.0</string>
-    <string name="quote_open">“</string>
-    <string name="quote_close">„</string>
+    <string name="quote_open">"</string>
+    <string name="quote_close">""</string>
 
     <string name="moods_and_genres">Moods and genres</string>
     <string name="new_released_albums">New released albums</string>
@@ -434,4 +434,12 @@
         <item quantity="one">%1$d song</item>
         <item quantity="other">%1$d songs</item>
     </plurals>
+
+    <string name="ytmusic">YouTube Music</string>
+    <string name="ytmusic_login">Accedi con Google</string>
+    <string name="ytmusic_login_description">Collega il tuo account YouTube Music per importare le tue playlist personali.</string>
+    <string name="ytmusic_logout">Disconnetti YouTube Music</string>
+    <string name="ytmusic_import">Importa playlist da YouTube Music</string>
+    <string name="ytmusic_logged_in">Account collegato: %1$s</string>
+    <string name="ytmusic_not_logged_in">Nessun account collegato</string>
 </resources>

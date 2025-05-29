@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.vitune.android.Database
+import app.vitune.android.R
 import app.vitune.android.models.PlaylistPreview
 import app.vitune.android.ui.components.themed.TextPlaceholder
 import app.vitune.android.utils.center
@@ -99,7 +100,15 @@ fun PlaylistItem(
 
     PlaylistItem(
         thumbnailContent = {
-            if (thumbnails.toSet().size == 1) AsyncImage(
+            if (playlist.isYouTubeMusic) {
+                Image(
+                    painter = painterResource(id = R.drawable.youtube_music),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(24.dp)
+                )
+            } else if (thumbnails.toSet().size == 1) AsyncImage(
                 model = thumbnails.first().thumbnail(thumbnailSizePx),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,

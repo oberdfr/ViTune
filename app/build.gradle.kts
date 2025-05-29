@@ -181,4 +181,6 @@ dependencies {
 
     detektPlugins(libs.detekt.compose)
     detektPlugins(libs.detekt.formatting)
+
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

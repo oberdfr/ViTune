@@ -87,6 +87,8 @@ fun HomePlaylists(
     var items by persistList<PlaylistPreview>("home/playlists")
     var pipedSessions by persist<Map<PipedSession, List<PipedPlaylistPreview>?>>("home/piped")
 
+    val ytMusicPlaylists = DataPreferences.ytMusicPlaylists
+
     LaunchedEffect(playlistSortBy, playlistSortOrder) {
         Database
             .playlistPreviews(playlistSortBy, playlistSortOrder)
@@ -289,6 +291,35 @@ fun HomePlaylists(
                         }
                     }
                 }
+
+            if (ytMusicPlaylists.isNotEmpty()) {
+                item(key = "ytmusic-header", contentType = 0, span = { GridItemSpan(maxLineSpan) }) {
+                    SettingsGroupSpacer()
+                    SettingsEntryGroupText(title = "YouTube Music")
+                }
+                items(
+                    items = ytMusicPlaylists,
+                    key = { "ytmusic-${it.id}" }
+                ) { playlist ->
+                    PlaylistItem(
+                        playlist = PlaylistPreview(
+                            id = playlist.id.hashCode().toLong(),
+                            name = playlist.title,
+                            songCount = playlist.songCount,
+                            thumbnail = playlist.thumbnail,
+                            isYouTubeMusic = true,
+                            ytMusicId = playlist.id
+                        ),
+                        thumbnailSize = Dimensions.thumbnails.playlist,
+                        alternative = UIStatePreferences.playlistsAsGrid,
+                        modifier = Modifier
+                            .clickable(onClick = {
+                                // TODO: Naviga alla schermata dettagliata della playlist YTMusic
+                            })
+                            .animateItem(fadeInSpec = null, fadeOutSpec = null)
+                    )
+                }
+            }
         }
 
         FloatingActionsContainerWithScrollToTop(

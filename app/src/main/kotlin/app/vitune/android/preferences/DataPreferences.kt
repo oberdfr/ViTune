@@ -10,6 +10,15 @@ import app.vitune.providers.innertube.Innertube
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class YTMusicPlaylist(
+    val id: String,
+    val title: String,
+    val songCount: Int,
+    val thumbnail: String? = null
+)
 
 object DataPreferences : GlobalPreferencesHolder() {
     var coilDiskCacheMaxSize by enum(CoilDiskCacheSize.`128MB`)
@@ -26,6 +35,9 @@ object DataPreferences : GlobalPreferencesHolder() {
     var shouldCacheQuickPicks by boolean(true)
     var cachedQuickPicks by json(Innertube.RelatedPage())
     var autoSyncPlaylists by boolean(true)
+    var ytMusicIdToken by string("")
+    var ytMusicAccountEmail by string("")
+    var ytMusicPlaylists by json<List<YTMusicPlaylist>>(emptyList())
 
     enum class TopListPeriod(
         val displayName: @Composable () -> String,

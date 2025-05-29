@@ -10,5 +10,7 @@ data class Playlist(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val browseId: String? = null,
-    val thumbnail: String? = null
+    val thumbnail: String? = null,
+    val isYouTubeMusic: Boolean = false,
+    val ytMusicId: String? = null
 )

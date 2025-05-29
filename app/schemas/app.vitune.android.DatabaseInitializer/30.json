@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 30,
-    "identityHash": "17e6383ea8e4d6c4774898994501f11a",
+    "identityHash": "0c794b931f2d0720541e541ad8f1a1e7",
     "entities": [
       {
         "tableName": "Song",
@@ -23,26 +23,22 @@
           {
             "fieldPath": "artistsText",
             "columnName": "artistsText",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "durationText",
             "columnName": "durationText",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "thumbnailUrl",
             "columnName": "thumbnailUrl",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "likedAt",
             "columnName": "likedAt",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "totalPlayTimeMs",
@@ -53,8 +49,7 @@
           {
             "fieldPath": "loudnessBoost",
             "columnName": "loudnessBoost",
-            "affinity": "REAL",
-            "notNull": false
+            "affinity": "REAL"
           },
           {
             "fieldPath": "blacklisted",
@@ -76,9 +71,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "SongPlaylistMap",
@@ -157,7 +150,7 @@
       },
       {
         "tableName": "Playlist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `browseId` TEXT, `thumbnail` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `browseId` TEXT, `thumbnail` TEXT, `isYouTubeMusic` INTEGER NOT NULL, `ytMusicId` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -174,14 +167,23 @@
           {
             "fieldPath": "browseId",
             "columnName": "browseId",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "thumbnail",
             "columnName": "thumbnail",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isYouTubeMusic",
+            "columnName": "isYouTubeMusic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ytMusicId",
+            "columnName": "ytMusicId",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -189,9 +191,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "Artist",
@@ -206,26 +206,22 @@
           {
             "fieldPath": "name",
             "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "thumbnailUrl",
             "columnName": "thumbnailUrl",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "bookmarkedAt",
             "columnName": "bookmarkedAt",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -233,9 +229,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "SongArtistMap",
@@ -319,56 +313,47 @@
           {
             "fieldPath": "title",
             "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "thumbnailUrl",
             "columnName": "thumbnailUrl",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "year",
             "columnName": "year",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "authorsText",
             "columnName": "authorsText",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "shareUrl",
             "columnName": "shareUrl",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "bookmarkedAt",
             "columnName": "bookmarkedAt",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "otherInfo",
             "columnName": "otherInfo",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -376,9 +361,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "SongAlbumMap",
@@ -399,8 +382,7 @@
           {
             "fieldPath": "position",
             "columnName": "position",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -488,8 +470,7 @@
             "orders": [],
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_SearchQuery_query` ON `${TABLE_NAME}` (`query`)"
           }
-        ],
-        "foreignKeys": []
+        ]
       },
       {
         "tableName": "QueuedMediaItem",
@@ -510,8 +491,7 @@
           {
             "fieldPath": "position",
             "columnName": "position",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -519,9 +499,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "Format",
@@ -536,38 +514,32 @@
           {
             "fieldPath": "itag",
             "columnName": "itag",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "mimeType",
             "columnName": "mimeType",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "bitrate",
             "columnName": "bitrate",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "contentLength",
             "columnName": "contentLength",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "lastModified",
             "columnName": "lastModified",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "loudnessDb",
             "columnName": "loudnessDb",
-            "affinity": "REAL",
-            "notNull": false
+            "affinity": "REAL"
           }
         ],
         "primaryKey": {
@@ -576,7 +548,6 @@
             "songId"
           ]
         },
-        "indices": [],
         "foreignKeys": [
           {
             "table": "Song",
@@ -664,20 +635,17 @@
           {
             "fieldPath": "fixed",
             "columnName": "fixed",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "synced",
             "columnName": "synced",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "startTime",
             "columnName": "startTime",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -686,7 +654,6 @@
             "songId"
           ]
         },
-        "indices": [],
         "foreignKeys": [
           {
             "table": "Song",
@@ -747,8 +714,7 @@
             "orders": [],
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_PipedSession_apiBaseUrl_username` ON `${TABLE_NAME}` (`apiBaseUrl`, `username`)"
           }
-        ],
-        "foreignKeys": []
+        ]
       }
     ],
     "views": [
@@ -759,7 +725,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '17e6383ea8e4d6c4774898994501f11a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0c794b931f2d0720541e541ad8f1a1e7')"
     ]
   }
 }
